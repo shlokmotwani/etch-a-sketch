@@ -1,64 +1,88 @@
-const newGridButton = document.querySelector("button");
-const container = document.querySelector(".container");
+const body = document.querySelector("body");
+body.setAttribute("style", "background-color: rgb(178, 102, 255);")
 
-container.setAttribute("style", `display: flex;
+const newGridButton = document.createElement("button");
+const containerBig = document.querySelector(".container-big");
+const containerGrid = document.createElement("div");
+
+
+//sets containerBig attributes
+containerBig.setAttribute("style", `display: flex;
 flex-direction: column;
 align-items: center;`);
 
+//sets containerBig attributes
+containerGrid.setAttribute("class", "container-grid");
+containerGrid.setAttribute("style", `background-color: rgb(250,235,215);`);
 
+//sets button attributes
 newGridButton.setAttribute("style", `width: 450px;
 height: 50px;
-font-size: 20px;`);
+font-size: 20px;
+margin: 20px;
+border-radius: 10px;`);
 
-container.appendChild(newGridButton);
+newGridButton.textContent = "Create My Sketchpad!";
 
+containerBig.appendChild(newGridButton);
+containerBig.appendChild(containerGrid);
+
+//event listener on button
 newGridButton.addEventListener("click", ()=>{
     let size = +prompt("How many squares do you want per side?");
-    if(size > 100 || size < 0){
-        size = 100;
+    if(size > 70 || size < 0){
+        size = 70;
     }
-    while(container.firstChild.nextSibling){
-        container.removeChild(container.firstChild.nextSibling);
+    while(containerBig.firstChild.nextSibling.firstChild){
+        containerBig.firstChild.nextSibling.removeChild(containerBig.firstChild.nextSibling.firstChild);
     }
 
     createGrid(size);
 })
 
+
+//creates a new grid on button click
 function createGrid(size){
-    let width = 900/size;
+    let width = 850/(1.2 * size);
     for(let i=0; i<size; i++){
         const rowDiv = document.createElement("div");
         for(let j=0; j<size; j++){
             const div = document.createElement("div");
 
-            let r = Math.floor(Math.random() * 255 + 1);
-            let g = Math.floor(Math.random() * 255 + 1);
-            let b = Math.floor(Math.random() * 255 + 1);
-
             div.setAttribute("style", `width: ${width}px;
             height: ${width}px;
-            background-color: rgb(${r}, ${g}, ${b});`);
+            border: 2px solid black;
+            border-radius: 7px;`);
 
             rowDiv.setAttribute("style", 
             `display: flex;`);
 
-            let speed = [r/9, g/9, b/9];
-
-            addEventListenersToDiv(div, speed);
+            addEventListenerToDiv(div);
 
 
             rowDiv.appendChild(div);
         }
-        container.appendChild(rowDiv);
+        containerGrid.appendChild(rowDiv);
     }
 }
 
-function addEventListenersToDiv(elem, speed){
+function addEventListenerToDiv(elem){
     elem.addEventListener("mouseenter", ()=>{
         let clr = elem.style.backgroundColor;
-        console.log(clr);
+        let r = g = b = 255;
+        if(!clr){
+            r = Math.floor(Math.random() * 255 + 1);
+            g = Math.floor(Math.random() * 255 + 1);
+            b = Math.floor(Math.random() * 255 + 1);
+
+            elem.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+        }
+        
+        //stores rgb value of current color of a div in an array
         clr = clr.slice(4, -1).split(",");
-        console.log(clr);
+
+        let speed = [r/9, g/9, b/9];
         elem.style.backgroundColor = `rgb(${clr[0] - speed[0]}, ${clr[1] - speed[1]}, ${clr[2] - speed[2]})`;
+
     });
 }
