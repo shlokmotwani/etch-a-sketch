@@ -30,14 +30,21 @@ function createGrid(size){
         const rowDiv = document.createElement("div");
         for(let j=0; j<size; j++){
             const div = document.createElement("div");
+
+            let r = Math.floor(Math.random() * 255 + 1);
+            let g = Math.floor(Math.random() * 255 + 1);
+            let b = Math.floor(Math.random() * 255 + 1);
+
             div.setAttribute("style", `width: ${width}px;
             height: ${width}px;
-            background-color: gray;`);
+            background-color: rgb(${r}, ${g}, ${b});`);
 
             rowDiv.setAttribute("style", 
             `display: flex;`);
 
-            addEventListenersToDiv(div);
+            let speed = [r/9, g/9, b/9];
+
+            addEventListenersToDiv(div, speed);
 
 
             rowDiv.appendChild(div);
@@ -46,8 +53,12 @@ function createGrid(size){
     }
 }
 
-function addEventListenersToDiv(elem){
+function addEventListenersToDiv(elem, speed){
     elem.addEventListener("mouseenter", ()=>{
-        elem.style.backgroundColor = "brown";
+        let clr = elem.style.backgroundColor;
+        console.log(clr);
+        clr = clr.slice(4, -1).split(",");
+        console.log(clr);
+        elem.style.backgroundColor = `rgb(${clr[0] - speed[0]}, ${clr[1] - speed[1]}, ${clr[2] - speed[2]})`;
     });
 }
